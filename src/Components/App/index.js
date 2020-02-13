@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Button from '../Button'
+import Menu from "../../assets/menu.png"
+import commafy from "../utils/commafy"
 
 import './App.css'
 
@@ -7,6 +9,18 @@ const App = () => {
     const [value, setValue] = useState("0")
     const [memory, setMemory] = useState(null)
     const [operator, setOperator] = useState(null)
+    const [time, setTime] = useState(new Date())
+
+    useEffect(() => {
+        var timerID = setInterval(() => tick(), 1000);
+        return function cleanup() {
+            clearInterval(timerID);
+        }
+    })
+
+    function tick () {
+        setTime(new Date())
+    }
 
     const handleButtonPress = (content) => () => {
         const num = parseFloat(value)
@@ -29,6 +43,13 @@ const App = () => {
             setMemory(null);
             return
         } 
+
+        if (content === ".") {
+            if (value.includes('.')) return
+
+            setValue(value + ".")
+            return
+        }
 
         if (content === "+") {
             if (operator !== null) {
@@ -121,14 +142,38 @@ const App = () => {
             setOperator(null);
             return
         }
-        
-        setValue(parseFloat(num + content).toString());
+
+        if (value[value.lenght - 1] === '.') {
+            setValue(value + content)
+        } else {
+            setValue(parseFloat(num + content).toString());
+        }
     }
 
     return (
       <div className="App">
-        <div className="top">4:43</div>
-        <div className="display">{value}</div>
+        <div className="top">
+          <div className="time">
+            {time
+              .getHours()
+              .toString()
+              .padStart(2, "0")}
+            :
+            {time
+              .getMinutes()
+              .toString()
+              .padStart(2, "0")}
+            :
+            {time
+              .getSeconds()
+              .toString()
+              .padStart(2, "0")}
+          </div>
+          <div className="menu">
+            <img src={Menu} alt="" />
+          </div>
+        </div>
+        <div className="display">{commafy(value)}</div>
         <div className="buttons">
           <Button
             onButtonClick={handleButtonPress}
@@ -182,7 +227,7 @@ const App = () => {
             type="operator"
           />
         </div>
-        <div className="bottom">bottom</div>
+        <div className="bottom"></div>
       </div>
     );
 }

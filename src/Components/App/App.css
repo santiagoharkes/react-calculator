@@ -5,9 +5,12 @@
     color: white;
     border-radius: 50px;
     padding: 20px;
+    position: relative;
 }
 
 .top {
+    display: flex;
+    justify-content: space-between;
     height: 250px;
     padding: 0 20px;
 }
@@ -27,5 +30,11 @@
 }
 
 .bottom {
-
+    position: absolute;
+    width: 200px;
+    height: 5px;
+    background: white;
+    bottom: 20px;
+    left: calc(50% - 100px);
+    border-radius: 4px;
 }
